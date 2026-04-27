@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>МотоМир — Всё о мотоциклах</title>
+    <style>
+        /* =========================================
+           1. БАЗОВЫЕ ПЕРЕМЕННЫЕ И СБРОС
+           ========================================= */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* По умолчанию: Тёмная тема */
+            --primary: #e63946;
+            --primary-dark: #b71c2c;
+            --dark: #1a1a2e;
+            --darker: #0f0f1a;
+            --card-bg: #16213e;
+            --text: #e0e0e0;
+            --text-muted: #a0a0b0;
+            --accent: #f4a261;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --neon-glow: none;
+            --card-border: rgba(255, 255, 255, 0.05);
+            --nav-bg: rgba(15, 15, 26, 0.9);
+            --btn-shadow: 0 10px 30px rgba(230, 57, 70, 0.3);
+            --input-bg: var(--darker);
+            --scrollbar-thumb: var(--primary);
+        }
+
+        /* ===== ТЁМНАЯ (по умолчанию) ===== */
+        /* Переменные уже заданы в :root */
+
+        /* ===== СВЕТЛАЯ ===== */
+        .theme-light {
+            --primary: #e63946;
+            --primary-dark: #b71c2c;
+            --dark: #f4f5f7;
+            --darker: #ffffff;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-muted: #6b7280;
+            --accent: #f4a261;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --neon-glow: none;
+            --card-border: rgba(0, 0, 0, 0.08);
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --btn-shadow: 0 10px 30px rgba(230, 57, 70, 0.25);
+            --input-bg: #f8f9fa;
+        }
+
+        /* ===== CYBER NEON ===== */
+        .theme-cyber {
+            --primary: #00f3ff;
+            --primary-dark: #0088cc;
+            --dark: #0a0a1a;
+            --darker: #050510;
+            --card-bg: #0d0d25;
+            --text: #e0ffff;
+            --text-muted: #88ffff;
+            --accent: #ff00ff;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --neon-glow: 0 0 12px rgba(0, 243, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.25);
+            --card-border: rgba(0, 243, 255, 0.25);
+            --nav-bg: rgba(5, 5, 16, 0.95);
+            --btn-shadow: 0 0 15px rgba(0, 243, 255, 0.6), 0 0 30px rgba(255, 0, 255, 0.3);
+            --input-bg: #0a0a1a;
+        }
+
+        /* ===== VAPORWAVE ===== */
+        .theme-vapor {
+            --primary: #ff71ce;
+            --primary-dark: #cc55aa;
+            --dark: #1a1025;
+            --darker: #120c1a;
+            --card-bg: #1e1530;
+            --text: #fff0f5;
+            --text-muted: #b399cc;
+            --accent: #01cdfe;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --neon-glow: 0 0 12px rgba(255, 113, 206, 0.5), 0 0 25px rgba(1, 205, 254, 0.25);
+            --card-border: rgba(255, 113, 206, 0.25);
+            --nav-bg: rgba(18, 12, 26, 0.95);
+            --btn-shadow: 0 0 15px rgba(255, 113, 206, 0.5), 0 0 30px rgba(1, 205, 254, 0.25);
+            --input-bg: #1a1025;
+        }
+
+        /* ===== MATRIX ===== */
+        .theme-matrix {
+            --primary: #00ff41;
+            --primary-dark: #00cc33;
+            --dark: #0a0f0a;
+            --darker: #050805;
+            --card-bg: #0c120c;
+            --text: #d0ffd0;
+            --text-muted: #88cc88;
+            --accent: #00ff41;
+            --gradient: linear-gradient(135deg, var(--primary), var(--accent));
+            --neon-glow: 0 0 12px rgba(0, 255, 65, 0.5), 0 0 25px rgba(0, 204, 51, 0.3);
+            --card-border: rgba(0, 255, 65, 0.25);
+            --nav-bg: rgba(5, 8, 5, 0.95);
+            --btn-shadow: 0 0 15px rgba(0, 255, 65, 0.5), 0 0 30px rgba(0, 204, 51, 0.3);
+            --input-bg: #0a0f0a;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--darker);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+
+        .section-title span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section {
+            padding: 80px 0;
+            transition: background-color 0.4s ease;
+        }
+
+        /* =========================================
+           2. ПАНЕЛЬ ТЕМ
+           ========================================= */
+        .theme-switcher {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 1005;
+        }
+
+        .theme-btn-main {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            color: var(--text);
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--neon-glow, 0 4px 15px rgba(0,0,0,0.3));
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn-main:hover {
+            transform: scale(1.1) rotate(20deg);
+        }
+
+        .theme-panel {
+            position: absolute;
+            bottom: 65px;
+            right: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: var(--neon-glow, 0 10px 30px rgba(0,0,0,0.4));
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-panel.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: all;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text);
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .theme-option:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .theme-option.active {
+            background: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            box-shadow: var(--neon-glow, none);
+        }
+
+        .theme-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .dot-dark { background: #1a1a2e; }
+        .dot-light { background: #ffffff; }
+        .dot-cyber { background: linear-gradient(135deg, #00f3ff, #ff00ff); }
+        .dot-vapor { background: linear-gradient(135deg, #ff71ce, #01cdfe); }
+        .dot-matrix { background: #00ff41; }
+
+        /* =========================================
+           3. НАВИГАЦИЯ
+           ========================================= */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            transition: all 0.4s ease;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .burger span {
+            width: 28px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        /* =========================================
+           4. HERO-БАННЕР
+           ========================================= */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(230, 57, 70, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 50%, rgba(244, 162, 97, 0.1) 0%, transparent 50%),
+                var(--darker);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 600px; height: 600px; border-radius: 50%;
+            border: 1px solid var(--card-border);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 400px; height: 400px; border-radius: 50%;
+            border: 1px solid var(--card-border);
+            animation: pulse 4s ease-in-out infinite 1s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+        }
+
+        .hero-content { position: relative; z-index: 1; }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            border: 1px solid var(--primary);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            animation: fadeInDown 1s ease;
+            box-shadow: var(--neon-glow, none);
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: var(--neon-glow, none);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 550px;
+            margin: 0 auto 40px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: #fff;
+            box-shadow: var(--btn-shadow);
+            text-shadow: var(--neon-glow, none);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(230, 57, 70, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--card-border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--neon-glow, none);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px; height: 50px;
+            border: 2px solid var(--card-border);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .scroll-indicator span::after {
+            content: '';
+            width: 4px; height: 10px;
+            background: var(--primary);
+            border-radius: 2px;
+            position: absolute;
+            top: 8px; left: 50%; transform: translateX(-50%);
+            animation: scrollDot 2s infinite;
+            box-shadow: var(--neon-glow, none);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
+        }
+
+        @keyframes scrollDot {
+            0% { opacity: 1; top: 8px; }
+            100% { opacity: 0; top: 28px; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* =========================================
+           5. ТИПЫ МОТОЦИКЛОВ
+           ========================================= */
+        #types { background: var(--dark); }
+
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .type-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+        }
+
+        .type-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .type-card:hover::before { transform: scaleX(1); }
+
+        .type-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--neon-glow, 0 20px 60px rgba(0,0,0,0.3));
+            border-color: var(--primary);
+        }
+
+        .type-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+        .type-card h3 { font-size: 1.4rem; margin-bottom: 12px; color: var(--text); }
+        .type-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* =========================================
+           6. МОТОЦИКЛЫ СТРАН
+           ========================================= */
+        #countries { background: var(--darker); }
+
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .country-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            transition: all 0.4s ease;
+        }
+
+        .country-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--neon-glow, 0 25px 60px rgba(0,0,0,0.4));
+            border-color: var(--primary);
+        }
+
+        .country-header { padding: 25px; display: flex; align-items: center; gap: 15px; }
+        .country-flag { font-size: 3rem; }
+        .country-header h3 { font-size: 1.5rem; color: #fff; margin: 0; }
+
+        .country-header-1 { background: linear-gradient(135deg, var(--dark), #0039A6); }
+        .country-header-2 { background: linear-gradient(135deg, var(--dark), #BC002D); }
+        .country-header-3 { background: linear-gradient(135deg, var(--dark), #000000); }
+        .country-header-4 { background: linear-gradient(135deg, var(--dark), #009246); }
+        .country-header-5 { background: linear-gradient(135deg, var(--dark), #CE2B37); }
+        .country-header-6 { background: linear-gradient(135deg, var(--dark), #00247D); }
+        .country-header-7 { background: linear-gradient(135deg, var(--dark), #FF8C00); }
+
+        .country-body { padding: 25px; }
+        .country-brands { margin-bottom: 20px; }
+        .country-brands h4, .country-features h4 {
+            font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); margin-bottom: 10px;
+        }
+
+        .brand-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .brand-tag {
+            padding: 5px 12px; background: rgba(255,255,255,0.08);
+            border-radius: 20px; font-size: 0.85rem; color: #fff;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .country-description { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px; }
+        .country-features { border-top: 1px solid var(--card-border); padding-top: 15px; }
+        .feature-list { list-style: none; }
+        .feature-list li { padding: 5px 0; color: var(--text); font-size: 0.9rem; }
+        .feature-list li::before { content: '▸'; color: var(--primary); font-weight: bold; margin-right: 8px; }
+
+        /* =========================================
+           7. МОТОКЛУБЫ
+           ========================================= */
+        #clubs { background: var(--darker); }
+
+        .clubs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .club-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            transition: all 0.4s ease;
+        }
+
+        .club-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--neon-glow, 0 25px 60px rgba(0,0,0,0.4));
+            border-color: var(--primary);
+        }
+
+        .club-header { padding: 30px; }
+        .club-header-1 { background: linear-gradient(135deg, var(--dark), #c41e3a); }
+        .club-header-2 { background: linear-gradient(135deg, var(--dark), #ffd700); }
+        .club-header-3 { background: linear-gradient(135deg, var(--dark), #8b0000); }
+        .club-header-4 { background: linear-gradient(135deg, var(--dark), #4a4a4a); }
+        .club-header-5 { background: linear-gradient(135deg, var(--dark), #5b86e5); }
+
+        .club-icon { font-size: 4rem; margin-bottom: 15px; }
+        .club-header h3 { font-size: 1.8rem; color: #fff; margin-bottom: 5px; }
+        .club-founding { font-size: 0.9rem; opacity: 0.9; }
+        .club-body { padding: 25px; }
+        .club-info-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--card-border); }
+        .club-info-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .club-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 5px; }
+        .club-value { font-size: 1rem; color: var(--text); font-weight: 600; }
+        .club-description { color: var(--text-muted); font-size: 0.9rem; margin-top: 15px; }
+
+        .badge {
+            display: inline-block; padding: 4px 12px; border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; margin-left: 10px;
+        }
+        .badge-1percenter { background: var(--primary); color: #000; }
+
+        /* =========================================
+           8. ПОПУЛЯРНЫЕ МОДЕЛИ
+           ========================================= */
+        #models { background: var(--darker); }
+
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .model-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--card-border);
+        }
+
+        .model-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--neon-glow, 0 25px 60px rgba(0,0,0,0.4));
+            border-color: var(--primary);
+        }
+
+        .model-image {
+            height: 220px; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; font-size: 5rem;
+        }
+
+        .model-image-1 { background: linear-gradient(135deg, var(--dark), #e63946); }
+        .model-image-2 { background: linear-gradient(135deg, var(--dark), #f4a261); }
+        .model-image-3 { background: linear-gradient(135deg, var(--dark), #2a9d8f); }
+        .model-image-4 { background: linear-gradient(135deg, var(--dark), #457b9d); }
+
+        .model-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--primary); color: #000; padding: 5px 15px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+
+        .model-info { padding: 25px; }
+        .model-info h3 { font-size: 1.3rem; color: var(--text); margin-bottom: 5px; }
+        .model-info .brand { color: var(--primary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .model-info p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px; }
+
+        .model-price {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 1.15rem; font-weight: 700; color: var(--accent);
+            background: rgba(244, 162, 97, 0.1); padding: 6px 12px;
+            border-radius: 8px; margin-bottom: 15px;
+            box-shadow: var(--neon-glow, none);
+        }
+
+        .model-specs {
+            display: flex; justify-content: space-between;
+            border-top: 1px solid var(--card-border); padding-top: 15px;
+            flex-wrap: wrap; gap: 10px;
+        }
+
+        .spec { text-align: center; flex: 1; min-width: 60px; }
+        .spec-value { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+        .spec-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* =========================================
+           9. СТАТИСТИКА
+           ========================================= */
+        .stats { background: var(--dark); padding: 60px 0; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; text-align: center; }
+        .stat-item h2 {
+            font-size: 3rem; font-weight: 900;
+            background: var(--gradient); -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; background-clip: text;
+            text-shadow: var(--neon-glow, none);
+        }
+        .stat-item p { color: var(--text-muted); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        /* =========================================
+           10. ИСТОРИЯ
+           ========================================= */
+        #history { background: var(--darker); }
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            width: 2px; height: 100%; background: var(--gradient);
+        }
+        .timeline-item { display: flex; align-items: center; margin-bottom: 50px; position: relative; }
+        .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+        .timeline-content {
+            width: 45%; background: var(--card-bg); padding: 25px; border-radius: 15px;
+            border: 1px solid var(--card-border); transition: all 0.3s ease;
+        }
+        .timeline-content:hover {
+            border-color: var(--primary); transform: scale(1.02);
+            box-shadow: var(--neon-glow, none);
+        }
+        .timeline-dot {
+            width: 16px; height: 16px; background: var(--primary); border-radius: 50%;
+            position: absolute; left: 50%; transform: translateX(-50%);
+            border: 3px solid var(--darker); z-index: 1;
+            box-shadow: var(--neon-glow, none);
+        }
+        .timeline-year { font-size: 1.5rem; font-weight: 900; color: var(--primary); margin-bottom: 8px; }
+        .timeline-content h3 { font-size: 1.1rem; color: var(--text); margin-bottom: 8px; }
+        .timeline-content p { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* =========================================
+           11. СОВЕТЫ
+           ========================================= */
+        #tips { background: var(--dark); }
+        .tips-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+        .tip-card {
+            background: var(--card-bg); border-radius: 15px; padding: 30px;
+            border-left: 4px solid var(--primary); transition: all 0.3s ease;
+            border: 1px solid var(--card-border); border-left-width: 4px;
+        }
+        .tip-card:hover {
+            transform: translateX(5px); border-left-color: var(--accent);
+            box-shadow: var(--neon-glow, none);
+        }
+        .tip-number {
+            font-size: 2.5rem; font-weight: 900; background: var(--gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; opacity: 0.5; margin-bottom: 10px;
+        }
+        .tip-card h3 { font-size: 1.15rem; color: var(--text); margin-bottom: 10px; }
+        .tip-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* =========================================
+           12. ФУТЕР
+           ========================================= */
+        footer {
+            background: var(--dark); padding: 60px 0 30px;
+            border-top: 1px solid var(--card-border);
+        }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-about .logo { margin-bottom: 15px; display: inline-block; }
+        .footer-about p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+        .social-links { display: flex; gap: 12px; }
+        .social-links a {
+            width: 40px; height: 40px; background: var(--card-bg); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s; font-size: 1.1rem; border: 1px solid var(--card-border);
+        }
+        .social-links a:hover {
+            background: var(--primary); transform: translateY(-3px);
+            box-shadow: var(--neon-glow, none);
+        }
+        .footer-col h4 { font-size: 1.1rem; color: var(--text); margin-bottom: 20px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: var(--text-muted); font-size: 0.9rem; }
+        .footer-col ul li a:hover { color: var(--primary); }
+        .footer-bottom {
+            border-top: 1px solid var(--card-border); padding-top: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--text-muted); font-size: 0.85rem;
+        }
+
+        /* =========================================
+           13. АДАПТИВНОСТЬ
+           ========================================= */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 3rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .timeline::before { left: 20px; }
+            .timeline-item, .timeline-item:nth-child(odd) { flex-direction: row; padding-left: 50px; }
+            .timeline-content { width: 100%; }
+            .timeline-dot { left: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; position: absolute; top: 70px; left: 0; width: 100%;
+                background: var(--nav-bg); flex-direction: column;
+                align-items: center; padding: 30px 0; gap: 20px;
+            }
+            .nav-links.active { display: flex; }
+            .burger { display: flex; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .section-title { font-size: 2rem; }
+            .models-grid, .clubs-grid, .countries-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .stat-item h2 { font-size: 2rem; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+        }
+
+        /* Специальные правки для светлой темы */
+        .theme-light .burger span { background: var(--text); }
+        .theme-light .brand-tag { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: var(--text); }
+        .theme-light .club-header-1, .theme-light .club-header-2, .theme-light .club-header-3,
+        .theme-light .club-header-4, .theme-light .club-header-5,
+        .theme-light .country-header-1, .theme-light .country-header-2, .theme-light .country-header-3,
+        .theme-light .country-header-4, .theme-light .country-header-5, .theme-light .country-header-6,
+        .theme-light .country-header-7 {
+            background: linear-gradient(135deg, var(--dark), rgba(255,255,255,0.1));
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Панель выбора тем -->
+    <div class="theme-switcher">
+        <button class="theme-btn-main" id="themeToggle" aria-label="Выбрать тему">🎨</button>
+        <div class="theme-panel" id="themePanel">
+            <button class="theme-option active" data-theme="theme-dark">
+                <span class="theme-dot dot-dark"></span> Тёмная
+            </button>
+            <button class="theme-option" data-theme="theme-light">
+                <span class="theme-dot dot-light"></span> Светлая
+            </button>
+            <button class="theme-option" data-theme="theme-cyber">
+                <span class="theme-dot dot-cyber"></span> Cyber Neon
+            </button>
+            <button class="theme-option" data-theme="theme-vapor">
+                <span class="theme-dot dot-vapor"></span> Vaporwave
+            </button>
+            <button class="theme-option" data-theme="theme-matrix">
+                <span class="theme-dot dot-matrix"></span> Matrix
+            </button>
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">МОТО<span>МИР</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#types">Типы</a></li>
+                <li><a href="#models">Модели</a></li>
+                <li><a href="#countries">Страны</a></li>
+                <li><a href="#clubs">Клубы</a></li>
+                <li><a href="#history">История</a></li>
+                <li><a href="#tips">Советы</a></li>
+            </ul>
+            <button class="burger" id="burger" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🏍️ Скорость • Свобода • Адреналин</div>
+            <h1>Почувствуй <span>свободу</span><br>на двух колёсах</h1>
+            <p>Всё о мотоциклах — от классики до суперспортов. Узнавайте, выбирайте и отправляйтесь в путь.</p>
+            <div class="hero-buttons">
+                <a href="#models" class="btn btn-primary">Смотреть модели</a>
+                <a href="#types" class="btn btn-outline">Узнать больше</a>
+            </div>
+        </div>
+        <div class="scroll-indicator"><span></span></div>
+    </section>
+
+    <!-- Типы мотоциклов -->
+    <section id="types">
+        <div class="container">
+            <h2 class="section-title"><span>Типы мотоциклов</span></h2>
+            <p class="section-subtitle">Каждый тип создан для своего стиля езды. Найдите свой идеальный мотоцикл.</p>
+            <div class="types-grid">
+                <div class="type-card"><span class="type-icon">🏎️</span><h3>Спортивные</h3><p>Созданы для скорости и трека. Аэродинамический обтекатель, мощные двигатели и превосходная управляемость на высоких скоростях.</p></div>
+                <div class="type-card"><span class="type-icon">🛣️</span><h3>Туристические</h3><p>Идеальны для дальних путешествий. Комфортная посадка, вместительные кофры и мощные двигатели для многочасовых поездок.</p></div>
+                <div class="type-card"><span class="type-icon">🏔️</span><h3>Эндуро</h3><p>Для бездорожья и приключений. Высокий клиренс, длинноходная подвеска и лёгкая конструкция покорят любой маршрут.</p></div>
+                <div class="type-card"><span class="type-icon">🏙️</span><h3>Классические</h3><p>Вневременной стиль и универсальность. Прямая посадка, характерный дизайн и удовольствие от каждой поездки по городу.</p></div>
+                <div class="type-card"><span class="type-icon">💀</span><h3>Круизеры</h3><p>Стиль и мощь в духе американских хайвеев. Низкая посадка, огромный крутящий момент и неповторимый характер.</p></div>
+                <div class="type-card"><span class="type-icon">⚡</span><h3>Нейкед</h3><p>Обнажённая мощь без обтекателей. Универсальные мотоциклы с агрессивным характером для города и загородных дорог.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Мотоциклы стран -->
+    <section id="countries">
+        <div class="container">
+            <h2 class="section-title"><span>Мотоциклы стран мира</span></h2>
+            <p class="section-subtitle">Каждая страна имеет свою уникальную мотоциклетную культуру и традиции производства.</p>
+            <div class="countries-grid">
+                <div class="country-card">
+                    <div class="country-header country-header-1"><div class="country-flag">🇷🇺</div><h3>Россия</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">ИЖ</span><span class="brand-tag">Урал</span><span class="brand-tag">Восход</span><span class="brand-tag">Минск</span><span class="brand-tag">Ирбитский МЗ</span></div></div>
+                        <div class="country-description">Советская и российская мотопромышленность известна надёжными, неприхотливыми мотоциклами с боковым прицепом. Урал и Днепр — легенды отечественного мотостроения.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Оппозитные двигатели</li><li>Высокая проходимость</li><li>Простота конструкции</li><li>Ремонтопригодность</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-2"><div class="country-flag">🇯🇵</div><h3>Япония</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">Honda</span><span class="brand-tag">Yamaha</span><span class="brand-tag">Kawasaki</span><span class="brand-tag">Suzuki</span></div></div>
+                        <div class="country-description">«Большая четвёрка» доминирует на мировом рынке. Японские мотоциклы славятся надёжностью, передовыми технологиями и отличным соотношением цены и качества.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Высокая надёжность</li><li>Передовые технологии</li><li>Широкий модельный ряд</li><li>Доступность запчастей</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-3"><div class="country-flag">🇺🇸</div><h3>США</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">Harley-Davidson</span><span class="brand-tag">Indian</span><span class="brand-tag">Victory</span><span class="brand-tag">Buell</span></div></div>
+                        <div class="country-description">Американская школа — это круизеры и чопперы с характерным V-twin двигателем, низким звуком и неповторимым стилем. Символ свободы.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>V-Twin двигатели</li><li>Низкий крутящий момент</li><li>Классический дизайн</li><li>Культурное наследие</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-4"><div class="country-flag">🇩🇪</div><h3>Германия</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">BMW</span><span class="brand-tag">MZ</span><span class="brand-tag">Zündapp</span></div></div>
+                        <div class="country-description">Немецкая точность и качество. BMW с оппозитными двигателями и карданным приводом — эталон туристических мотоциклов.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Оппозитные двигатели</li><li>Карданный привод</li><li>Передовая электроника</li><li>Премиальное качество</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-5"><div class="country-flag">🇮🇹</div><h3>Италия</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">Ducati</span><span class="brand-tag">MV Agusta</span><span class="brand-tag">Moto Guzzi</span><span class="brand-tag">Aprilia</span></div></div>
+                        <div class="country-description">Итальянская страсть и стиль. Ducati с десмодромными двигателями, MV Agusta с гоночными корнями — искусство на двух колёсах.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Спортивный характер</li><li>Уникальный дизайн</li><li>Гоночные технологии</li><li>Эмоциональность</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-6"><div class="country-flag">🇬🇧</div><h3>Великобритания</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">Triumph</span><span class="brand-tag">Norton</span><span class="brand-tag">BSA</span><span class="brand-tag">Royal Enfield</span></div></div>
+                        <div class="country-description">Британская классика и традиции. Triumph возродил славу британского мотопрома, сочетая ретро-стиль с современными технологиями.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Классический стиль</li><li>Параллельные твины</li><li>Наследие 60-х</li><li>Современные технологии</li></ul></div>
+                    </div>
+                </div>
+                <div class="country-card">
+                    <div class="country-header country-header-7"><div class="country-flag">🇳🇱</div><h3>Нидерланды</h3></div>
+                    <div class="country-body">
+                        <div class="country-brands"><h4>Производители</h4><div class="brand-tags"><span class="brand-tag">EVM</span><span class="brand-tag">Rokon</span></div></div>
+                        <div class="country-description">Голландские мотоциклы — это инновации и специализированные решения. Голландские инженеры создают уникальные концепты.</div>
+                        <div class="country-features"><h4>Особенности</h4><ul class="feature-list"><li>Инновационные решения</li><li>Электрические мотоциклы</li><li>Экологичность</li><li>Дизайн</li></ul></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Мотоклубы -->
+    <section id="clubs">
+        <div class="container">
+            <h2 class="section-title"><span>Известные мотоклубы</span></h2>
+            <p class="section-subtitle">Легендарные мотоклубы, которые вошли в историю байкерской культуры.</p>
+            <div class="clubs-grid">
+                <div class="club-card">
+                    <div class="club-header club-header-1"><div class="club-icon">💀</div><h3>Hells Angels MC <span class="badge badge-1percenter">1%</span></h3><div class="club-founding">Основан: 17 марта 1948</div></div>
+                    <div class="club-body">
+                        <div class="club-info-item"><div class="club-label">Цвета клуба</div><div class="club-value">Красный и белый</div></div>
+                        <div class="club-info-item"><div class="club-label">Численность</div><div class="club-value">3,000—3,600 членов</div></div>
+                        <div class="club-info-item"><div class="club-label">География</div><div class="club-value">592 чартера в 66 странах</div></div>
+                        <div class="club-info-item"><div class="club-label">Символика</div><div class="club-value">Череп с крыльями (Death Head)</div></div>
+                        <div class="club-description">Один из крупнейших и самых известных мотоклубов в мире. Входит в «Большую четвёрку» outlaw-клубов.</div>
+                    </div>
+                </div>
+                <div class="club-card">
+                    <div class="club-header club-header-2"><div class="club-icon">🗡️</div><h3>Bandidos MC <span class="badge badge-1percenter">1%</span></h3><div class="club-founding">Основан: 4 марта 1966</div></div>
+                    <div class="club-body">
+                        <div class="club-info-item"><div class="club-label">Цвета клуба</div><div class="club-value">Алый и золотой</div></div>
+                        <div class="club-info-item"><div class="club-label">Численность</div><div class="club-value">5,000—10,000 членов</div></div>
+                        <div class="club-info-item"><div class="club-label">География</div><div class="club-value">210 чаптеров в 16+ странах</div></div>
+                        <div class="club-info-item"><div class="club-label">Девиз</div><div class="club-value">«Мы те самые, кем пугали нас наши родители»</div></div>
+                        <div class="club-description">Основан в Техасе. Второй по величине мотоклуб в мире после Hells Angels.</div>
+                    </div>
+                </div>
+                <div class="club-card">
+                    <div class="club-header club-header-3"><div class="club-icon">🐺</div><h3>Ночные Волки</h3><div class="club-founding">Основан: 1989</div></div>
+                    <div class="club-body">
+                        <div class="club-info-item"><div class="club-label">Основатель</div><div class="club-value">Александр «Хирург» Залдостанов</div></div>
+                        <div class="club-info-item"><div class="club-label">Численность</div><div class="club-value">Более 7,000 членов</div></div>
+                        <div class="club-info-item"><div class="club-label">География</div><div class="club-value">45+ чаптеров по всему миру</div></div>
+                        <div class="club-info-item"><div class="club-label">Статус</div><div class="club-value">Первый официальный мотоклуб в СССР</div></div>
+                        <div class="club-description">Крупнейший российский мотоклуб. Владеет рок-клубами, производит мотоциклы Wolf-Ural.</div>
+                    </div>
+                </div>
+                <div class="club-card">
+                    <div class="club-header club-header-4"><div class="club-icon">⚔️</div><h3>Outlaws MC <span class="badge badge-1percenter">1%</span></h3><div class="club-founding">Основан: 1935</div></div>
+                    <div class="club-body">
+                        <div class="club-info-item"><div class="club-label">Цвета клуба</div><div class="club-value">Чёрный и белый</div></div>
+                        <div class="club-info-item"><div class="club-label">Прозвище</div><div class="club-value">«The O.M.C.»</div></div>
+                        <div class="club-info-item"><div class="club-label">География</div><div class="club-value">Присутствуют в 30+ странах</div></div>
+                        <div class="club-info-item"><div class="club-label">Статус</div><div class="club-value">Старейший 1% клуб</div></div>
+                        <div class="club-description">Старейший из «однопроцентных» мотоклубов. Основной соперник Hells Angels.</div>
+                    </div>
+                </div>
+                <div class="club-card">
+                    <div class="club-header club-header-5"><div class="club-icon">🏍️</div><h3>Ангелы Ночи</h3><div class="club-founding">Основан: 1994</div></div>
+                    <div class="club-body">
+                        <div class="club-info-item"><div class="club-label">Город</div><div class="club-value">Саяногорск, Республика Хакасия</div></div>
+                        <div class="club-info-item"><div class="club-label">Статус</div><div class="club-value">Один из старейших мотоклубов Сибири</div></div>
+                        <div class="club-info-item"><div class="club-label">Участие</div><div class="club-value">Межрегиональные мотопробеги</div></div>
+                        <div class="club-info-item"><div class="club-label">Направления</div><div class="club-value">Путешествия, взаимопомощь</div></div>
+                        <div class="club-description">Один из первых и наиболее известных мотоклубов Восточной Сибири. Объединяет энтузиастов, совершающих пробеги по Сибири, Алтаю и Байкалу.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Популярные модели -->
+    <section id="models">
+        <div class="container">
+            <h2 class="section-title"><span>Популярные модели</span></h2>
+            <p class="section-subtitle">Легендарные мотоциклы, которые покорили сердца миллионов райдеров по всему миру.</p>
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-image model-image-1">🏍️<span class="model-badge">Хит продаж</span></div>
+                    <div class="model-info">
+                        <div class="brand">Yamaha</div><h3>YZF-R1</h3>
+                        <p>Легендарный суперспорт с кросс-плейн двигателем. Иконический звук и непревзойдённая динамика на треке и дороге.</p>
+                        <div class="model-price">💰 от 2 100 000 ₽</div>
+                        <div class="model-specs"><div class="spec"><div class="spec-value">200</div><div class="spec-label">Л.С.</div></div><div class="spec"><div class="spec-value">998</div><div class="spec-label">Куб. см</div></div><div class="spec"><div class="spec-value">201</div><div class="spec-label">Кг</div></div><div class="spec"><div class="spec-value">299</div><div class="spec-label">Км/ч</div></div></div>
+                    </div>
+                </div>
+                <div class="model-card">
+                    <div class="model-image model-image-2">🏍️<span class="model-badge">Классика</span></div>
+                    <div class="model-info">
+                        <div class="brand">Harley-Davidson</div><h3>Fat Boy 114</h3>
+                        <p>Иконический круизер, ставший символом свободы. Массивный Milwaukee-Eight 114 дарит невероятный крутящий момент.</p>
+                        <div class="model-price">💰 от 2 800 000 ₽</div>
+                        <div class="model-specs"><div class="spec"><div class="spec-value">94</div><div class="spec-label">Л.С.</div></div><div class="spec"><div class="spec-value">1868</div><div class="spec-label">Куб. см</div></div><div class="spec"><div class="spec-value">317</div><div class="spec-label">Кг</div></div><div class="spec"><div class="spec-value">180</div><div class="spec-label">Км/ч</div></div></div>
+                    </div>
+                </div>
+                <div class="model-card">
+                    <div class="model-image model-image-3">🏍️<span class="model-badge">Новинка</span></div>
+                    <div class="model-info">
+                        <div class="brand">BMW</div><h3>S 1000 RR</h3>
+                        <p>Баварский суперспорт с асимметричным дизайном. ShiftCam технология и электронные помощники нового поколения.</p>
+                        <div class="model-price">💰 от 2 350 000 ₽</div>
+                        <div class="model-specs"><div class="spec"><div class="spec-value">210</div><div class="spec-label">Л.С.</div></div><div class="spec"><div class="spec-value">999</div><div class="spec-label">Куб. см</div></div><div class="spec"><div class="spec-value">197</div><div class="spec-label">Кг</div></div><div class="spec"><div class="spec-value">306</div><div class="spec-label">Км/ч</div></div></div>
+                    </div>
+                </div>
+                <div class="model-card">
+                    <div class="model-image model-image-4">🏍️<span class="model-badge">Легенда 90-х</span></div>
+                    <div class="model-info">
+                        <div class="brand">Honda</div><h3>Pacific Coast (PC800)</h3>
+                        <p>Уникальный туристический мотоцикл с интегрированным багажником и футуристичным дизайном. Идеальный баланс комфорта и надёжности.</p>
+                        <div class="model-price">💰 б/у от 450 000 ₽</div>
+                        <div class="model-specs"><div class="spec"><div class="spec-value">62</div><div class="spec-label">Л.С.</div></div><div class="spec"><div class="spec-value">798</div><div class="spec-label">Куб. см</div></div><div class="spec"><div class="spec-value">304</div><div class="spec-label">Кг</div></div><div class="spec"><div class="spec-value">175</div><div class="spec-label">Км/ч</div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Статистика -->
+    <div class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item"><h2 id="stat1">0</h2><p>Производителей</p></div>
+                <div class="stat-item"><h2 id="stat2">0</h2><p>Лет истории</p></div>
+                <div class="stat-item"><h2 id="stat3">0</h2><p>Моделей на рынке</p></div>
+                <div class="stat-item"><h2 id="stat4">0</h2><p>Млн райдеров</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- История -->
+    <section id="history">
+        <div class="container">
+            <h2 class="section-title"><span>История мотоциклов</span></h2>
+            <p class="section-subtitle">От первого двигателя до электрических супермото — путь длиной в полтора столетия.</p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content"><div class="timeline-year">1885</div><h3>Первый мотоцикл</h3><p>Готлиб Даймлер и Вильгельм Майбах создали «Деревянный велосипед с двигателем» — первый в мире мотоцикл с ДВС.</p></div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content"><div class="timeline-year">1901</div><h3>Indian Motorcycle</h3><p>Основана компания Indian — один из старейших мотоциклетных брендов в мире.</p></div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content"><div class="timeline-year">1936</div><h3>BMW R5</h3><p>BMW представила R5 — революционный мотоцикл с телескопической вилкой и оппозитным двигателем.</p></div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content"><div class="timeline-year">1969</div><h3>Honda CB750</h3><p>Honda CB750 стала первым серийным мотоциклом с рядным четырёхцилиндровым двигателем и дисковыми тормозами.</p></div>
+                    <div class="timeline-dot"></div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content"><div class="timeline-year">2020+</div><h3>Электрическая эра</h3><p>Energica, Zero, LiveWire и другие бренды выводят электрические мотоциклы на новый уровень.</p></div>
+                    <div class="timeline-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Советы -->
+    <section id="tips">
+        <div class="container">
+            <h2 class="section-title"><span>Советы райдерам</span></h2>
+            <p class="section-subtitle">Полезные рекомендации для начинающих и опытных мотоциклистов.</p>
+            <div class="tips-grid">
+                <div class="tip-card"><div class="tip-number">01</div><h3>Экипировка — прежде всего</h3><p>Всегда надевайте шлем, куртку, перчатки и боты. Качественная экипировка может спасти жизнь.</p></div>
+                <div class="tip-card"><div class="tip-number">02</div><h3>Пройдите обучение</h3><p>Запишитесь в мотошколу. Правильная техника управления и экстренного торможения — основа безопасности.</p></div>
+                <div class="tip-card"><div class="tip-number">03</div><h3>Проверяйте мотоцикл</h3><p>Перед каждой поездкой проверяйте давление в шинах, уровень масла, работу тормозов и световых приборов.</p></div>
+                <div class="tip-card"><div class="tip-number">04</div><h3>Будьте заметны</h3><p>Используйте яркую экипировку и светоотражающие элементы. Большинство аварий происходит из-за невнимательности водителей.</p></div>
+                <div class="tip-card"><div class="tip-number">05</div><h3>Не переоценивайте себя</h3><p>Начинайте с мотоцикла небольшого объёма. Наращивайте мастерство постепенно.</p></div>
+                <div class="tip-card"><div class="tip-number">06</div><h3>Регулярное ТО</h3><p>Соблюдайте регламент обслуживания. Своевременная замена масла и цепи — залог долгой службы.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <div class="logo">МОТО<span>МИР</span></div>
+                    <p>Ваш гид в мире мотоциклов с 2020 года. Обзоры, тесты, советы и всё, что нужно настоящему райдеру.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="YouTube">▶</a><a href="#" aria-label="Telegram">✈</a><a href="#" aria-label="VK">V</a><a href="#" aria-label="Instagram">📷</a>
+                    </div>
+                </div>
+                <div class="footer-col"><h4>Разделы</h4><ul><li><a href="#types">Типы мотоциклов</a></li><li><a href="#models">Популярные модели</a></li><li><a href="#countries">Страны</a></li><li><a href="#clubs">Мотоклубы</a></li><li><a href="#history">История</a></li><li><a href="#tips">Советы</a></li></ul></div>
+                <div class="footer-col"><h4>Бренды</h4><ul><li><a href="#">Yamaha</a></li><li><a href="#">Honda</a></li><li><a href="#">BMW</a></li><li><a href="#">Harley-Davidson</a></li><li><a href="#">Kawasaki</a></li></ul></div>
+                <div class="footer-col"><h4>Информация</h4><ul><li><a href="#">О проекте</a></li><li><a href="#">Реклама</a></li><li><a href="#">Политика конфиденциальности</a></li></ul></div>
+            </div>
+            <div class="footer-bottom"><span>© 2026 МотоМир. Все права защищены.</span><span>Сделано с ❤️ для мотоциклистов</span></div>
+        </div>
+    </footer>
+
+    <script>
+        // Бургер-меню
+        const burger = document.getElementById('burger');
+        const navLinks = document.getElementById('navLinks');
+        burger.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')));
+
+        // Анимация счётчиков
+        function animateCounter(elementId, target, suffix = '') {
+            const el = document.getElementById(elementId);
+            let current = 0;
+            const increment = target / 60;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) { current = target; clearInterval(timer); }
+                el.textContent = Math.floor(current) + suffix;
+            }, 25);
+        }
+
+        let statsAnimated = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    animateCounter('stat1', 150, '+'); animateCounter('stat2', 140, '+');
+                    animateCounter('stat3', 2000, '+'); animateCounter('stat4', 200, '+');
+                }
+            });
+        }, { threshold: 0.5 });
+        if (document.querySelector('.stats')) statsObserver.observe(document.querySelector('.stats'));
+
+        // Плавное появление элементов
+        const appearObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.type-card, .model-card, .country-card, .club-card, .tip-card, .timeline-content').forEach(el => {
+            el.style.opacity = '0'; el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            appearObserver.observe(el);
+        });
+
+        // Навигация при скролле
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const bg = window.scrollY > 100 ? 'rgba(15, 15, 26, 0.98)' : 'rgba(15, 15, 26, 0.9)';
+            const lightBg = window.scrollY > 100 ? 'rgba(255, 255, 255, 0.98)' : 'rgba(255, 255, 255, 0.95)';
+            const isNeon = document.body.classList.contains('theme-cyber') || document.body.classList.contains('theme-vapor') || document.body.classList.contains('theme-matrix');
+            nav.style.background = isNeon ? bg.replace('15, 15, 26', '5, 5, 16').replace('15, 15, 26, 0.9', '5, 5, 16, 0.95') : 
+                                  document.body.classList.contains('theme-light') ? lightBg : bg;
+        });
+
+        // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМ =====
+        const themeToggle = document.getElementById('themeToggle');
+        const themePanel = document.getElementById('themePanel');
+        const themeOptions = document.querySelectorAll('.theme-option');
+        const body = document.body;
+
+        // Загрузка сохранённой темы
+        const savedTheme = localStorage.getItem('moto-theme') || 'theme-dark';
+        body.classList.add(savedTheme);
+        updateActiveTheme(savedTheme);
+
+        // Открытие/закрытие панели
+        themeToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            themePanel.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!themePanel.contains(e.target) && e.target !== themeToggle) {
+                themePanel.classList.remove('active');
+            }
+        });
+
+        // Выбор темы
+        themeOptions.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                
+                // Удаляем все классы тем
+                body.classList.remove('theme-dark', 'theme-light', 'theme-cyber', 'theme-vapor', 'theme-matrix');
+                body.classList.add(theme);
+                
+                localStorage.setItem('moto-theme', theme);
+                updateActiveTheme(theme);
+                themePanel.classList.remove('active');
+            });
+        });
+
+        function updateActiveTheme(activeTheme) {
+            themeOptions.forEach(btn => btn.classList.toggle('active', btn.dataset.theme === activeTheme));
+        }
+    </script>
+</body>
+</html>
